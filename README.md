@@ -40,6 +40,8 @@ This project investigates user engagement and churn by addressing real-world bus
 
 > 🌟 The objective of this project is to transform raw user activity data into actionable business insights that support product decisions, customer retention strategies, and data-driven decision making.
 
+---
+
 ## 🚀 Key Objectives
 
 * **Analyze** user engagement across different customer segments.
