@@ -21,6 +21,18 @@ def check_dataset_shape(dataset):
     print("-" * 30)
     print(f"Rows    : {total_rows}")
     print(f"Columns : {total_columns}")
+    return{
+
+        "check":"Dataset Shape",
+
+        "status":"PASS",
+
+        "issues_found":0,
+
+        "recommendation":
+        "No action required."
+
+    }
 
 
 
@@ -68,6 +80,13 @@ def check_column_names(dataset):
 
     print(f"\nTotal Expected Columns : {len(expected_columns)}")
     print(f"Total Loaded Columns   : {len(actual_columns)}")
+    missing_columns=[c for c in expected_columns if c not in actual_columns]  
+    return {  
+        "check":"Column Names",
+        "status":"PASS" if len(missing_columns)==0 else "FAIL",
+        "issues_found":len(missing_columns),
+        "recommendation":"No action required." if len(missing_columns)==0 else f"Add missing columns: {missing_columns}"
+    }
 
 
 
@@ -78,6 +97,7 @@ def check_data_types(dataset):
     for column_name, data_type in dataset.dtype.descr:  #descr gives same information as for dtype in a format that's easy to iterate over with a for loop.
 
         print(f"{column_name:<35} : {data_type}")
+    return {"check":"Data Types","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 
@@ -97,6 +117,7 @@ def check_missing_values(dataset):
             missing_count = np.sum(column_data == "") # counting empty string val
 
         print(f"{column_name:<35} : {missing_count}")
+    return {"check":"Missing Values","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 
@@ -117,6 +138,7 @@ def check_duplicate_users(dataset):
     print(f"Duplicate User IDs : {duplicate_count}")
     if duplicate_count == 0:
         print("✅ No duplicate user IDs found.")
+        return {"check":"Duplicate User IDs","status":"PASS","issues_found":0,"recommendation":"No action required."}  
     else:
         print("❌ Duplicate user IDs detected.")
         # Printing only duplicated user IDs.
@@ -125,6 +147,16 @@ def check_duplicate_users(dataset):
             if frequency > 1:
 
                 print(f"{duplicate_id} --> appears {frequency} times")
+    return {
+        "check": "Duplicate User IDs",
+        "status": "PASS" if duplicate_count == 0 else "FAIL",
+        "issues_found": duplicate_count,
+        "recommendation": (
+            "No action required."
+            if duplicate_count == 0
+            else "Remove or investigate duplicate user IDs."
+        )
+    }
 
 
 
@@ -160,7 +192,16 @@ def check_conflicting_user_records(dataset):
     if not conflict_found:
 
         print("✅ No conflicting user records found.")
-
+    return {
+        "check": "Conflicting User Records",
+        "status": "PASS" if not conflict_found else "FAIL",
+        "issues_found": 0 if not conflict_found else 1,
+        "recommendation": (
+            "No action required."
+            if not conflict_found
+            else "Investigate conflicting records with the same user ID."
+        )
+    }
 
 def check_duplicate_customer_profiles(dataset):
     
@@ -195,6 +236,7 @@ def check_duplicate_customer_profiles(dataset):
     if not duplicate_found:
 
         print("✅ No duplicate customer profiles found.")
+        return {"check":"Duplicate Customer Profiles","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 
@@ -282,6 +324,7 @@ def check_categorical_values(dataset):
         if not invalid_found:
 
             print("✅ Passed")
+    return {"check":"Categorical Values","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 def check_numeric_ranges(dataset):
@@ -342,6 +385,7 @@ def check_numeric_ranges(dataset):
             print(f"❌ {len(invalid_values)} invalid values")
 
             print("Examples :", np.unique(invalid_values)[:10])
+    return {"check":"Numeric Ranges","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 
@@ -390,6 +434,7 @@ def check_business_rules(dataset):
     if issues == 0:
 
         print("✅ All business rules passed.")
+        return {"check":"Business Rules","status":"PASS","issues_found":0,"recommendation":"No action required."}  
 
 
 
@@ -397,35 +442,37 @@ def check_business_rules(dataset):
 def validate_dataset(dataset):
     print("\nRunning Dataset Validation...")
     print("=" * 40)
+    results=[]
 
     #1st validation: checking the dataset shape
-    check_dataset_shape(dataset)
+    results.append(check_dataset_shape(dataset))
     
     #2nd validation: checking col names
-    check_column_names(dataset)
+    results.append(check_column_names(dataset))
 
     #3rd validation: checking data types
-    check_data_types(dataset)
+    results.append(check_data_types(dataset))
 
     #4th validation: checking missing values
-    check_missing_values(dataset)
+    results.append(check_missing_values(dataset))
 
     #5th validation: checking for duplicate user ids
-    check_duplicate_users(dataset)
+    results.append(check_duplicate_users(dataset))
 
     #6th validation: checking for conflicting user record with same id
-    check_conflicting_user_records(dataset)
+    results.append(check_conflicting_user_records(dataset))
 
     #7th validation: checking for duplicate customer profiles
-    check_duplicate_customer_profiles(dataset)
+    results.append(check_duplicate_customer_profiles(dataset))
 
     #8th validation: checking for categorical values
-    check_categorical_values(dataset)
+    results.append(check_categorical_values(dataset))
 
     #9th validation: checking numeric ranges
-    check_numeric_ranges(dataset)
+    results.append(check_numeric_ranges(dataset))
 
     #10th validation: checking business rule for DA or Product Analyst pov
-    check_business_rules(dataset)
+    results.append(check_business_rules(dataset))
 
     print("\nValidation Completed.")
+    return results
