@@ -10,9 +10,35 @@ The project follows a business-first approach where every analysis begins with a
 
 ## 🎯 Business Problem
 
-For subscription-based businesses such as Netflix, sustained user engagement is directly linked to customer retention and revenue growth. The objective of this project is to identify the factors influencing user engagement, understand why users churn, and uncover opportunities to improve customer retention through data-driven decision making.
+This project investigates user engagement and churn by addressing real-world business problems commonly faced by streaming platforms such as Netflix.
 
----
+### 📈 Product Analytics
+
+- Which factors increase or decrease user engagement?
+- Which user segments spend the most time watching content?
+- Does recommendation click rate translate into higher watch time?
+- Which subscription plans drive stronger engagement?
+- How do viewing habits differ across devices, regions, genders, and time of day?
+- Which user behaviors indicate an increased risk of churn?
+- What product improvements can improve user retention?
+
+### 📊 Data Analytics
+
+- Measure key engagement KPIs such as average watch time, session count, watch frequency, and recommendation click rate.
+- Identify trends and patterns across customer demographics.
+- Compare user behavior across regions, subscription plans, genres, and devices.
+- Perform exploratory data analysis (EDA) to uncover hidden insights.
+- Validate data quality through missing value detection, duplicate identification, and consistency checks.
+
+### 🤖 Data Science
+
+- Identify the variables most strongly associated with user engagement.
+- Discover behavioral patterns that distinguish churned and retained users.
+- Engineer meaningful analytical features for predictive modeling.
+- Prepare clean, validated data suitable for machine learning workflows.
+- Build a foundation for churn prediction and customer segmentation models.
+
+> 🌟 The objective of this project is to transform raw user activity data into actionable business insights that support product decisions, customer retention strategies, and data-driven decision making.
 
 ## 🚀 Key Objectives
 
