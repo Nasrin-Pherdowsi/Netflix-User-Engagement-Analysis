@@ -162,6 +162,237 @@ def check_conflicting_user_records(dataset):
         print("✅ No conflicting user records found.")
 
 
+def check_duplicate_customer_profiles(dataset):
+    
+    #Detects rows that are identical except for user_id.
+
+    print("\nChecking Duplicate Customer Profiles")
+    print("-" * 35)
+
+    # Stores every unique customer profile
+    seen_profiles = {}
+
+    duplicate_found = False
+
+    for record in dataset:
+
+        # Ignore user id col irrespect being it first or 5th col assuming user ids r diff but other info has been same 
+        profile = tuple(record[field] for field in dataset.dtype.names if field != "user_id")
+
+        if profile in seen_profiles:
+
+            duplicate_found = True
+
+            print("\n❌ Possible duplicate customer")
+
+            print(f"User ID 1 : {seen_profiles[profile]}")
+            print(f"User ID 2 : {record['user_id']}")
+
+        else:
+
+            seen_profiles[profile] = record["user_id"]
+
+    if not duplicate_found:
+
+        print("✅ No duplicate customer profiles found.")
+
+
+
+def check_categorical_values(dataset):
+    """
+    Validate whether categorical columns contain only
+    expected business values.eg if someone wrote Mle instead of Male or Premiu+
+    """
+
+    print("\nChecking Categorical Values")
+    print("-" * 35)
+
+    # Dictionary
+    # Key   -> Column name
+    # Value -> Allowed categories
+    allowed_values = {
+
+        "gender": {
+            "Male",
+            "Female"
+        },
+
+        "subscription_type": {
+            "Basic",
+            "Standard",
+            "Premium"
+        },
+
+        "payment_method": {
+            "Credit Card",
+            "Debit Card",
+            "Paypal"
+        },
+
+        "primary_device": {
+            "Mobile",
+            "Laptop",
+            "Tablet",
+            "Smart TV"
+        },
+
+        "time_of_day": {
+            "Morning",
+            "Afternoon",
+            "Evening",
+            "Night"
+        },
+
+        "recommendation_source": {
+            "Homepage",
+            "Friend",
+            "Email",
+            "Algorithm"
+        },
+
+        "churned": {
+            0,
+            1
+        }
+
+    }
+
+    # Loop through every column present inside dictionary
+    for column_name, valid_values in allowed_values.items():
+
+        print(f"\n{column_name}")
+
+        #entire column
+        column_data = dataset[column_name]
+
+        #only distinct values
+        unique_values = np.unique(column_data)
+
+        invalid_found = False
+
+        #Checking unique value
+        for value in unique_values:
+
+            if value not in valid_values:
+
+                print(f"❌ Invalid Value : {value}")
+
+                invalid_found = True
+
+        if not invalid_found:
+
+            print("✅ Passed")
+
+
+def check_numeric_ranges(dataset):
+
+    #certain columns like age etc shouldnt have -ve values
+
+    print("\nChecking Numeric Ranges")
+    print("-" * 35)
+
+    validation_rules = {
+
+        "age": (0,120),
+
+        "completion_rate": (0,100),
+
+        "recommendation_click_rate": (0,100),
+
+        "app_rating": (1,5),
+
+        "avg_rating_given": (1,5),
+
+        "session_count": (0,None),
+
+        "watch_sessions_per_week": (0,None),
+
+        "avg_watch_time_minutes_per_week": (0,None),
+
+        "account_age_months": (0,None),
+
+        "days_since_last_login": (0,None)
+
+    }
+
+    for column_name,(minimum,maximum) in validation_rules.items():
+
+        column_data = dataset[column_name]
+
+        invalid_values = []
+
+        for value in column_data:
+
+            if minimum is not None and value < minimum:
+
+                invalid_values.append(value)
+
+            elif maximum is not None and value > maximum:
+
+                invalid_values.append(value)
+
+        print(f"\n{column_name}")
+
+        if len(invalid_values)==0:
+
+            print("✅ Passed")
+
+        else:
+
+            print(f"❌ {len(invalid_values)} invalid values")
+
+            print("Examples :", np.unique(invalid_values)[:10])
+
+
+
+def check_business_rules(dataset):
+
+    print("\nChecking Business Rules")
+    print("-" * 35)
+
+    issues = 0
+
+    for record in dataset:
+
+        # Rule 1
+        if (
+            record["watch_sessions_per_week"] == 0
+            and
+            record["avg_watch_time_minutes_per_week"] > 0
+        ):
+
+            issues += 1
+
+            print(f"❌ {record['user_id']} : Watch time without sessions")
+
+        # Rule 2
+        if (
+            record["session_count"] == 0
+            and
+            record["recommendation_click_rate"] > 0
+        ):
+
+            issues += 1
+
+            print(f"❌ {record['user_id']} : Recommendation clicks without session")
+
+        # Rule 3
+        if (
+            record["watch_sessions_per_week"] == 0
+            and
+            record["completion_rate"] > 0
+        ):
+
+            issues += 1
+
+            print(f"❌ {record['user_id']} : Completion without watching")
+
+    if issues == 0:
+
+        print("✅ All business rules passed.")
+
+
+
 
 def validate_dataset(dataset):
     print("\nRunning Dataset Validation...")
@@ -184,5 +415,17 @@ def validate_dataset(dataset):
 
     #6th validation: checking for conflicting user record with same id
     check_conflicting_user_records(dataset)
+
+    #7th validation: checking for duplicate customer profiles
+    check_duplicate_customer_profiles(dataset)
+
+    #8th validation: checking for categorical values
+    check_categorical_values(dataset)
+
+    #9th validation: checking numeric ranges
+    check_numeric_ranges(dataset)
+
+    #10th validation: checking business rule for DA or Product Analyst pov
+    check_business_rules(dataset)
 
     print("\nValidation Completed.")
