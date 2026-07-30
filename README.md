@@ -37,7 +37,7 @@ All data manipulation and numerical computation are performed using **NumPy**, e
 
 * **Core Language:** Python
 * **Data Manipulation:** NumPy
-* **Data Visualization:** Matplotlib
+* **Data Visualization:** Matplotlib (upcoming)
 
 > 💡 **Project Philosophy:** This project is built primarily using **NumPy** to develop a strong understanding of efficient numerical computing, vectorized operations, and the analytical foundations that underpin modern data science libraries. Higher-level libraries will be introduced only when they provide clear advantages for specific analytical tasks.
 
