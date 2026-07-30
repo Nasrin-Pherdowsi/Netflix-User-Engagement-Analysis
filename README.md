@@ -71,6 +71,16 @@ All data manipulation and numerical computation are performed using **NumPy**, e
 
 ---
 
+## Dataset
+
+This project uses a publicly available Netflix User Engagement dataset containing **50,000 user records** and **20 features** related to demographics, subscription details, engagement metrics, and churn.
+
+**Source:** [Netflix User Engagement Dataset]((https://www.kaggle.com/datasets/husainsaeed/netflix-user-behavioral-churn-dataset))
+
+> **Note:** The dataset is intended for educational and analytical purposes. Some records are synthetically generated and may not always satisfy real-world business constraints. Data validation and preprocessing are therefore included as part of this project.
+
+---
+
 ## 📊 Current Progress
 
 * ✅ Project Architecture
